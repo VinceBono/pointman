@@ -1,0 +1,4 @@
+allowed_apps = ["notepad.exe"]   # executable names; everything else is invisible
+allow_actions = false            # true lets the agent click and type in those apps
+# kill_switch = "~/.pointman/STOP"
+# audit_log = "~/.pointman/audit.jsonl"
