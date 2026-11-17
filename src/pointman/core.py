@@ -36,6 +36,15 @@ def _is_password(element: Any) -> bool:
         return True
 
 
+def _text(element: Any) -> str:
+    if element.element_info.control_type == "Edit":
+        return element.get_value()[:MAX_VALUE]
+    return element.iface_text.DocumentRange.GetText(MAX_VALUE)  # "Document": Notepad, Word, rich text
+
+
+TEXT_TYPES = ("Edit", "Document")
+
+
 class Pointman:
     def __init__(self, policy: Policy, audit: AuditLog):
         self.policy = policy
@@ -101,11 +110,11 @@ class Pointman:
             for number, element in enumerate(elements, 1):
                 info = element.element_info
                 line = f"e{number} {info.control_type} {info.name!r}"
-                if info.control_type == "Edit":
+                if info.control_type in TEXT_TYPES:
                     if _is_password(element):
                         line += " value=(password, hidden)"
                     else:
-                        line += f" value={element.get_value()[:MAX_VALUE]!r}"
+                        line += f" value={_text(element)!r}"
                 lines.append(line)
             return "\n".join(lines)
 
@@ -138,6 +147,8 @@ class Pointman:
             detail["target"] = f"{element.element_info.control_type} {element.element_info.name!r}"
             if _is_password(element):
                 raise Denied("this is a password box; a person has to type into it")
+            if element.element_info.control_type != "Edit":
+                raise Denied("only Edit boxes can be set; this is a " + element.element_info.control_type)
             element.set_edit_text(text)
             return f"set {detail['target']}"
 

@@ -118,6 +118,7 @@ class DesktopTest(TempDir):
         self.assertIn("Button 'Greet'", tree)
         self.assertIn("(password, hidden)", tree)
         self.assertNotIn("hunter2", tree)
+        self.assertRegex(tree, r"Document 'Notes' value='line one")
         self.assertTrue(pointman.click(handle, self.ref(tree, "'Greet'")).startswith("DENIED: read-only"))
         self.assertIn("'waiting'", pointman.read_window(handle))
 
@@ -126,6 +127,7 @@ class DesktopTest(TempDir):
         handle = self.handle(pointman)
         tree = pointman.read_window(handle)
         self.assertTrue(pointman.set_text(handle, self.ref(tree, "'Secret'"), "x").startswith("DENIED"))
+        self.assertTrue(pointman.set_text(handle, self.ref(tree, "'Notes'"), "x").startswith("DENIED: only"))
         self.assertTrue(pointman.set_text(handle, self.ref(tree, "'Name'"), "Vince").startswith("set"))
         self.assertTrue(pointman.click(handle, self.ref(tree, "'Greet'")).startswith("clicked"))
         self.assertIn("'hello Vince'", pointman.read_window(handle))
