@@ -7,7 +7,7 @@ Add-Type -AssemblyName System.Windows.Forms
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Pointman Test Target"
 $form.Width = 360
-$form.Height = 220
+$form.Height = 300
 
 $name = New-Object System.Windows.Forms.TextBox
 $name.AccessibleName = "Name"
@@ -28,5 +28,14 @@ $button.Text = "Greet"
 $button.SetBounds(20, 90, 100, 28)
 $button.Add_Click({ $status.Text = "hello " + $name.Text })
 
-$form.Controls.AddRange(@($name, $secret, $button, $status))
+# A WPF rich text box reports as "Document", like the text area in Notepad.
+Add-Type -AssemblyName PresentationFramework, WindowsFormsIntegration
+$notesBox = New-Object System.Windows.Controls.RichTextBox
+$notesBox.AppendText("line one")
+[System.Windows.Automation.AutomationProperties]::SetName($notesBox, "Notes")
+$notes = New-Object System.Windows.Forms.Integration.ElementHost
+$notes.Child = $notesBox
+$notes.SetBounds(20, 165, 300, 60)
+
+$form.Controls.AddRange(@($name, $secret, $button, $status, $notes))
 [System.Windows.Forms.Application]::Run($form)

@@ -81,7 +81,10 @@ outcome. Text the agent types is not logged, only its length.
   pointman limits what a steered agent can reach; it does not detect the steering.
 - **Only apps that expose accessibility information work.** Games, some Electron and custom-drawn apps expose
   little or nothing. Controls that cannot be pressed through the accessibility interface return an error.
-- **Tested on one small test window**, on Windows 11 and in CI. Not yet tried against real applications.
+- **Typing works in plain text boxes only.** Document areas (Notepad, Word, rich text) can be read, up to the
+  first 200 characters, but not typed into yet.
+- **Tested on a small test window**, on Windows 11 and in CI, and read-only against Windows 11 Notepad.
+  Not yet tried against other real applications or with actions switched on in one.
 
 ## Development
 
