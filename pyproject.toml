@@ -1,0 +1,22 @@
+[project]
+name = "pointman"
+version = "0.1.0.dev0"
+description = "Let an AI agent operate Windows apps, locked down: app allowlist, read-only by default, kill switch, tamper-evident log."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Vince Bono" }]
+dependencies = [
+    "mcp>=2.3",
+    "pywinauto>=0.6.9; sys_platform == 'win32'",
+]
+
+[project.scripts]
+pointman = "pointman.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pointman"]
