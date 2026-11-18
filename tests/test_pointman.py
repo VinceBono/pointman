@@ -122,6 +122,15 @@ class DesktopTest(TempDir):
         self.assertTrue(pointman.click(handle, self.ref(tree, "'Greet'")).startswith("DENIED: read-only"))
         self.assertIn("'waiting'", pointman.read_window(handle))
 
+    def test_tools_run_when_called_through_the_server(self):
+        pointman = self.pointman(allowed_apps=frozenset({"powershell.exe"}))
+        handle = self.handle(pointman)
+        server = build_server(pointman)  # the server runs tools on worker threads, unlike the direct calls above
+        self.assertIn(TITLE, str(asyncio.run(server.call_tool("list_windows", {}))))
+        tree = str(asyncio.run(server.call_tool("read_window", {"handle": handle})))
+        self.assertIn("Greet", tree)
+        self.assertNotIn("hunter2", tree)
+
     def test_actions_work_when_allowed_are_logged_and_refuse_password_boxes(self):
         pointman = self.pointman(allowed_apps=frozenset({"powershell.exe"}), allow_actions=True)
         handle = self.handle(pointman)
